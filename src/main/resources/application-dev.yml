@@ -1,0 +1,3 @@
+# 서버환경입니다. application-dev.yml
+server:
+  port: 8080
