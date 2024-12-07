@@ -1,4 +1,4 @@
-package com.adit.global.error;
+package com.adit.backend.global.error;
 
 import java.io.IOException;
 
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import com.adit.global.error.exception.GlobalErrorCode;
+import com.adit.backend.global.error.exception.GlobalErrorCode;
 
 import lombok.extern.slf4j.Slf4j;
 

@@ -1,4 +1,4 @@
-package com.adit.global.error;
+package com.adit.backend.global.error;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 
-import com.adit.global.error.exception.GlobalErrorCode;
+import com.adit.backend.global.error.exception.GlobalErrorCode;
 
 import lombok.AccessLevel;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package com.adit.global.error.exception;
+package com.adit.backend.global.error.exception;
 
 import org.springframework.http.HttpStatus;
 
