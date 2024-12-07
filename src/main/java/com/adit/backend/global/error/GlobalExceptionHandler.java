@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+import com.adit.backend.global.ApiResponse;
 import com.adit.backend.global.error.exception.GlobalErrorCode;
 
 import lombok.extern.slf4j.Slf4j;
@@ -150,11 +151,12 @@ public class GlobalExceptionHandler {
 	 *
 	 * @param ex Exception
 	 * @return ResponseEntity<ErrorResponse>
+	 * GlobalExceptionHandler에서 ApiResponse.failure 메서드를 활용하여 통일된 에러 응답을 반환
 	 */
 	@ExceptionHandler(Exception.class)
-	protected final ResponseEntity<ErrorResponse> handleAllExceptions(Exception ex) {
+	protected final ResponseEntity<ApiResponse<Object>> handleAllExceptions(Exception ex) {
 		log.error("Exception", ex);
-		final ErrorResponse response = ErrorResponse.of(GlobalErrorCode.INTERNAL_SERVER_ERROR, ex.getMessage());
-		return new ResponseEntity<>(response, HTTP_STATUS_OK);
+		ErrorResponse errorResponse = ErrorResponse.of(GlobalErrorCode.INTERNAL_SERVER_ERROR, ex.getMessage());
+		return new ResponseEntity<>(ApiResponse.failure(errorResponse), HttpStatus.OK);
 	}
 }
