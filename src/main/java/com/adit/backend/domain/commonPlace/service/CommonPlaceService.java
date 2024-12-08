@@ -38,7 +38,7 @@ public class CommonPlaceService {
     // 장소 ID로 조회
     public CommonPlace getPlaceById(Long placeId) {
         return commonPlaceRepository.findById(placeId)
-                .orElseThrow(() -> new BusinessException(GlobalErrorCode.NOT_FOUND_ERROR, "Place not found"));
+                .orElseThrow(() -> new BusinessException("Place not found", GlobalErrorCode.NOT_FOUND_ERROR));
     }
 
     // 장소 정보 업데이트
