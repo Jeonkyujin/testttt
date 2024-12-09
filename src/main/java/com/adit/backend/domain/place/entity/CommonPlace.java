@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -35,4 +36,28 @@ public class CommonPlace extends BaseEntity {
 	private String subCategory;
 
 	private String url;
+
+	@Builder
+	public CommonPlace(Long id, String placeName, BigDecimal latitude, BigDecimal longitude, String addressName,
+		String roadAddressName, String subCategory, String url) {
+		this.id = id;
+		this.placeName = placeName;
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.addressName = addressName;
+		this.roadAddressName = roadAddressName;
+		this.subCategory = subCategory;
+		this.url = url;
+	}
+
+	public void updatePlace(String placeName, BigDecimal latitude, BigDecimal longitude, String addressName,
+		String roadAddressName, String subCategory, String url) {
+		this.placeName = placeName;
+		this.addressName = addressName;
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.roadAddressName = roadAddressName;
+		this.subCategory = subCategory;
+		this.url = url;
+	}
 }
