@@ -48,10 +48,10 @@ public class User extends BaseEntity {
     private List<UserPlace> userPlaces = new ArrayList<>();
 
     @OneToMany(mappedBy = "fromUser", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FriendRelationship> sentFriendRequests = new ArrayList<>();
+    private List<Friendship> sentFriendRequests = new ArrayList<>();
 
     @OneToMany(mappedBy = "toUser", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FriendRelationship> receivedFriendRequests = new ArrayList<>();
+    private List<Friendship> receivedFriendRequests = new ArrayList<>();
 
     // 연관관계 메서드
     public void addEvent(Event event) {
@@ -64,8 +64,8 @@ public class User extends BaseEntity {
         userPlace.setUser(this);
     }
 
-    public void addFriendRequest(FriendRelationship friendRelationship) {
-        this.sentFriendRequests.add(friendRelationship);
-        friendRelationship.setFromUser(this);
+    public void addFriendRequest(Friendship friendship) {
+        this.sentFriendRequests.add(friendship);
+        friendship.setFromUser(this);
     }
 }

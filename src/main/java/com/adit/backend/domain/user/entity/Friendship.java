@@ -20,7 +20,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class FriendRelationship extends BaseEntity {
+public class Friendship extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +38,7 @@ public class FriendRelationship extends BaseEntity {
 	private String status;
 
 	@Builder
-	public FriendRelationship(Long id, User fromUser, User toUser, String status) {
+	public Friendship(Long id, User fromUser, User toUser, String status) {
 		this.id = id;
 		this.fromUser = fromUser;
 		this.toUser = toUser;
