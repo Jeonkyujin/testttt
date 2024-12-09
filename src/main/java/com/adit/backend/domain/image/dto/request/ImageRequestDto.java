@@ -1,18 +1,15 @@
 package com.adit.backend.domain.image.dto.request;
 
+import com.adit.backend.domain.event.entity.Event;
+import com.adit.backend.domain.image.entity.Image;
+import com.adit.backend.domain.place.entity.CommonPlace;
+
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
-public class ImageRequestDto {
-
-    @NotNull
-    private Long placeId;
-
-    private Long eventId;
-    private String url;
-    private String fileName;
-    private String folderName;
+/**
+ * DTO for {@link Image}
+ */
+public record ImageRequestDto(@NotNull(message = "Place ID must not be null") CommonPlace place, Event event,
+							  String url,
+							  String fileName, String folderName) {
 }
