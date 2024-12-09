@@ -1,5 +1,7 @@
 # 로컬환경입니다. application-local.yml
 spring:
+  config:
+    import: optional:file:.env[.properties]
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
@@ -18,7 +20,12 @@ spring:
         hbm2ddl:
           auto: update
         default_batch_fetch_size: 1000
-
+  ai:
+    openai:
+      api-key: ${SPRING_AI_OPENAI_API_KEY}
+      chat:
+        options:
+          model: gpt-3.5-turbo
 
 springdoc:
   swagger-ui:
