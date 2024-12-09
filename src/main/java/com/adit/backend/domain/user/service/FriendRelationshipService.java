@@ -11,9 +11,9 @@ import com.adit.backend.domain.user.repository.FriendRelationshipRepository;
 import com.adit.backend.global.error.exception.BusinessException;
 import com.adit.backend.global.error.exception.GlobalErrorCode;
 
-import groovy.util.logging.Slf4j;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
