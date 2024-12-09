@@ -25,29 +25,29 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class ImageController {
 
-    private final ImageService imageService;
+	private final ImageService imageService;
 
-    // 이미지 업로드 API
-    @PostMapping
-    public ResponseEntity<ApiResponse<ImageResponseDto>> uploadImage(@Valid @RequestBody ImageRequestDto requestDto) {
-        // 이미지 정보를 받아서 저장
-        Image image = imageService.uploadImage(requestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(new ImageResponseDto(image)));
-    }
+	// 이미지 업로드 API
+	@PostMapping
+	public ResponseEntity<ApiResponse<ImageResponseDto>> uploadImage(@Valid @RequestBody ImageRequestDto requestDto) {
+		// 이미지 정보를 받아서 저장
+		Image image = imageService.uploadImage(requestDto);
+		return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(ImageResponseDto.from(image)));
+	}
 
-    // 특정 이미지 조회 API
-    @GetMapping("/{imageId}")
-    public ResponseEntity<ApiResponse<ImageResponseDto>> getImage(@PathVariable Long imageId) {
-        // 이미지 ID로 조회
-        Image image = imageService.getImageById(imageId);
-        return ResponseEntity.ok(ApiResponse.success(new ImageResponseDto(image)));
-    }
+	// 특정 이미지 조회 API
+	@GetMapping("/{imageId}")
+	public ResponseEntity<ApiResponse<ImageResponseDto>> getImage(@PathVariable Long imageId) {
+		// 이미지 ID로 조회
+		Image image = imageService.getImageById(imageId);
+		return ResponseEntity.ok(ApiResponse.success(ImageResponseDto.from(image)));
+	}
 
-    // 이미지 삭제 API
-    @DeleteMapping("/{imageId}")
-    public ResponseEntity<ApiResponse<String>> deleteImage(@PathVariable Long imageId) {
-        // 이미지 ID로 삭제
-        imageService.deleteImage(imageId);
-        return ResponseEntity.ok(ApiResponse.success("Image deleted successfully"));
-    }
+	// 이미지 삭제 API
+	@DeleteMapping("/{imageId}")
+	public ResponseEntity<ApiResponse<String>> deleteImage(@PathVariable Long imageId) {
+		// 이미지 ID로 삭제
+		imageService.deleteImage(imageId);
+		return ResponseEntity.ok(ApiResponse.success("Image deleted successfully"));
+	}
 }

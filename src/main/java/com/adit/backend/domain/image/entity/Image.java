@@ -13,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,21 +24,31 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Image extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "place_id")
-    private CommonPlace place;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "place_id")
+	private CommonPlace place;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_id")
-    private Event event;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "event_id")
+	private Event event;
 
-    @Column(nullable = false)
-    private String url;
+	@Column(nullable = false)
+	private String url;
 
-    private String fileName;
-    private String folderName;
+	private String fileName;
+	private String folderName;
+
+	@Builder
+	public Image(Long id, CommonPlace place, Event event, String url, String fileName, String folderName) {
+		this.id = id;
+		this.place = place;
+		this.event = event;
+		this.url = url;
+		this.fileName = fileName;
+		this.folderName = folderName;
+	}
 }

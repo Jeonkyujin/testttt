@@ -21,38 +21,41 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class ImageService {
 
-    private final ImageRepository imageRepository;
-    private final CommonPlaceRepository commonPlaceRepository;
-    private final EventRepository eventRepository;
+	private final ImageRepository imageRepository;
+	private final CommonPlaceRepository commonPlaceRepository;
+	private final EventRepository eventRepository;
 
-    // 이미지 업로드
+	// 이미지 업로드
 
-    public Image uploadImage(ImageRequestDto requestDto) {
-        CommonPlace place = commonPlaceRepository.findById(requestDto.getPlaceId())
-                .orElseThrow(() -> new BusinessException("Place not found", GlobalErrorCode.NOT_FOUND_ERROR));
+	public Image uploadImage(ImageRequestDto requestDto) {
+		CommonPlace place = commonPlaceRepository.findById(requestDto.place().getId())
+			.orElseThrow(() -> new BusinessException("Place not found", GlobalErrorCode.NOT_FOUND_ERROR));
 
-        Event event = requestDto.getEventId() != null ? eventRepository.findById(requestDto.getEventId())
-                .orElseThrow(() -> new BusinessException("Event not found", GlobalErrorCode.NOT_FOUND_ERROR)) : null;
+		Event event = requestDto.event().getId() != null ? eventRepository.findById(requestDto.event().getId())
+			.orElseThrow(() -> new BusinessException("Event not found", GlobalErrorCode.NOT_FOUND_ERROR)) : null;
 
-        Image image = new Image();
-        image.setPlace(place);
-        image.setEvent(event);
-        image.setUrl(requestDto.getUrl());
-        image.setFileName(requestDto.getFileName());
-        image.setFolderName(requestDto.getFolderName());
+		Image image = Image.builder()
+			.place(place)
+			.event(event)
+			.url(requestDto.url())
+			.fileName(requestDto.fileName())
+			.folderName(requestDto.folderName())
+			.build();
 
-        return imageRepository.save(image);
-    }
+		return imageRepository.save(image);
+	}
 
-    // 이미지 조회
-    public Image getImageById(Long imageId) {
-        return imageRepository.findById(imageId)
-                .orElseThrow(() -> new BusinessException("Image not found", GlobalErrorCode.NOT_FOUND_ERROR));
-    }
+	// 이미지 조회
+	public Image getImageById(Long imageId) {
+		return imageRepository.findById(imageId)
+			.orElseThrow(() -> new BusinessException("Image not found", GlobalErrorCode.NOT_FOUND_ERROR));
+	}
 
-    // 이미지 삭제
-    public void deleteImage(Long imageId) {
-        Image image = getImageById(imageId);
-        imageRepository.delete(image);
-    }
+	// 이미지 삭제
+	public void deleteImage(Long imageId) {
+		if (!imageRepository.existsById(imageId)) {
+			throw new BusinessException("Image not found", GlobalErrorCode.NOT_FOUND_ERROR);
+		}
+		imageRepository.deleteById(imageId);
+	}
 }
