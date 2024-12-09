@@ -80,6 +80,16 @@ public enum GlobalErrorCode implements ErrorCode {
 
 	// 에러 코드의 '코드 메시지'을 반환한다.
 	private final String message;
+
+	@Override
+	public HttpStatus getHttpStatus() {
+		return this.httpStatus;
+	}
+
+	@Override
+	public String getMessage() {
+		return this.message;
+	}
 }
 
 

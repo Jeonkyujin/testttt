@@ -1,6 +1,6 @@
 package com.adit.backend.global.error.exception;
 
-import org.apache.http.HttpStatus;
+import org.springframework.http.HttpStatus;
 
 public interface ErrorCode {
 	String name();
