@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.adit.backend.domain.image.dto.ImageRequestDto;
-import com.adit.backend.domain.image.dto.ImageResponseDto;
+import com.adit.backend.domain.image.dto.request.ImageRequestDto;
+import com.adit.backend.domain.image.dto.response.ImageResponseDto;
 import com.adit.backend.domain.image.entity.Image;
 import com.adit.backend.domain.image.service.ImageService;
-import com.adit.backend.global.ApiResponse;
+import com.adit.backend.global.common.ApiResponse;
 
 import jakarta.validation.Valid;
 import lombok.AccessLevel;

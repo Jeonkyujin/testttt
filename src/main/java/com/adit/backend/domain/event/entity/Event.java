@@ -4,9 +4,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.adit.backend.domain.commonPlace.entity.CommonPlace;
 import com.adit.backend.domain.image.entity.Image;
 import com.adit.backend.domain.notification.entity.Notification;
+import com.adit.backend.domain.place.entity.CommonPlace;
 import com.adit.backend.domain.user.entity.User;
 import com.adit.backend.global.entity.BaseEntity;
 

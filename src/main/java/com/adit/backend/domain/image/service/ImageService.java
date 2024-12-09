@@ -3,13 +3,13 @@ package com.adit.backend.domain.image.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.adit.backend.domain.commonPlace.entity.CommonPlace;
-import com.adit.backend.domain.commonPlace.repository.CommonPlaceRepository;
-import com.adit.backend.domain.event.EventRepository;
 import com.adit.backend.domain.event.entity.Event;
-import com.adit.backend.domain.image.dto.ImageRequestDto;
+import com.adit.backend.domain.event.repository.EventRepository;
+import com.adit.backend.domain.image.dto.request.ImageRequestDto;
 import com.adit.backend.domain.image.entity.Image;
 import com.adit.backend.domain.image.repository.ImageRepository;
+import com.adit.backend.domain.place.entity.CommonPlace;
+import com.adit.backend.domain.place.repository.CommonPlaceRepository;
 import com.adit.backend.global.error.exception.BusinessException;
 import com.adit.backend.global.error.exception.GlobalErrorCode;
 

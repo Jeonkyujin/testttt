@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.adit.backend.domain.event.entity.Event;
-import com.adit.backend.domain.friendRelationship.entity.FriendRelationship;
-import com.adit.backend.domain.userPlace.entity.UserPlace;
+import com.adit.backend.domain.place.entity.UserPlace;
 import com.adit.backend.global.entity.BaseEntity;
 
 import jakarta.persistence.CascadeType;
