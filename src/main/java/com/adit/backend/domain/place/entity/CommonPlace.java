@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,22 +17,22 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CommonPlace extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(nullable = false)
-    private String placeName;
+	@Column(nullable = false)
+	private String placeName;
 
-    private BigDecimal latitude;
-    private BigDecimal longitude;
+	private BigDecimal latitude;
+	private BigDecimal longitude;
 
-    private String addressName;
-    private String roadAddressName;
-    private String subCategory;
+	private String addressName;
+	private String roadAddressName;
+	private String subCategory;
 
-    private String url;
+	private String url;
 }
