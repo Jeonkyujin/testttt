@@ -5,6 +5,9 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+# Database
+.env
+
 ### STS ###
 .apt_generated
 .classpath
@@ -35,3 +38,15 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# Logs
+logs/
+*.log
+
+# Compiled class file
+*.class
+
+# Package Files
+*.jar
+*.war
+*.ear

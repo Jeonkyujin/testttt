@@ -1,10 +1,8 @@
-package com.adit.backend.domain.notification.entity;
+package com.adit.backend.domain.place.entity;
 
-import com.adit.backend.domain.event.entity.Event;
 import com.adit.backend.domain.user.entity.User;
 import com.adit.backend.global.entity.BaseEntity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -21,7 +19,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Notification extends BaseEntity {
+public class UserPlace extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,11 +30,9 @@ public class Notification extends BaseEntity {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_id")
-    private Event event;
+    @JoinColumn(name = "common_place_id", nullable = false)
+    private CommonPlace commonPlace;
 
-    @Column(nullable = false)
-    private String content;
-
-    private Boolean isRead;
+    private String memo;
+    private Boolean visited;
 }

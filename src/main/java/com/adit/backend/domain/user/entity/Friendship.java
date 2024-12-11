@@ -1,7 +1,5 @@
-package com.adit.backend.domain.image.entity;
+package com.adit.backend.domain.user.entity;
 
-import com.adit.backend.domain.event.entity.Event;
-import com.adit.backend.domain.place.entity.CommonPlace;
 import com.adit.backend.global.entity.BaseEntity;
 
 import jakarta.persistence.Column;
@@ -22,33 +20,28 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Image extends BaseEntity {
+public class Friendship extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "place_id")
-	private CommonPlace place;
+	@JoinColumn(name = "from_user_id", nullable = false)
+	private User fromUser;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "event_id")
-	private Event event;
+	@JoinColumn(name = "to_user_id", nullable = false)
+	private User toUser;
 
 	@Column(nullable = false)
-	private String url;
-
-	private String fileName;
-	private String folderName;
+	private String status;
 
 	@Builder
-	public Image(Long id, CommonPlace place, Event event, String url, String fileName, String folderName) {
+	public Friendship(Long id, User fromUser, User toUser, String status) {
 		this.id = id;
-		this.place = place;
-		this.event = event;
-		this.url = url;
-		this.fileName = fileName;
-		this.folderName = folderName;
+		this.fromUser = fromUser;
+		this.toUser = toUser;
+		this.status = status;
 	}
 }
