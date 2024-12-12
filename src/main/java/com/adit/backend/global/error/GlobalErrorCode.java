@@ -1,4 +1,6 @@
-package com.adit.backend.global.error.exception;
+package com.adit.backend.global.error;
+
+import static org.springframework.http.HttpStatus.*;
 
 import org.springframework.http.HttpStatus;
 
@@ -28,34 +30,34 @@ public enum GlobalErrorCode implements ErrorCode {
 	 * *********************************************************************************************
 	 */
 	// 잘못된 요청
-	BAD_REQUEST_ERROR(HttpStatus.BAD_REQUEST, "G001", "Bad Request Exception"),
+	BAD_REQUEST_ERROR(BAD_REQUEST, "G001", "Bad Request Exception"),
 
 	// @RequestBody 데이터 미 존재
-	REQUEST_BODY_MISSING_ERROR(HttpStatus.BAD_REQUEST, "G002", "Required request body is missing"),
+	REQUEST_BODY_MISSING_ERROR(BAD_REQUEST, "G002", "Required request body is missing"),
 
 	// 유효하지 않은 타입
-	INVALID_TYPE_VALUE(HttpStatus.BAD_REQUEST, "G003", " Invalid Type Value"),
+	INVALID_TYPE_VALUE(BAD_REQUEST, "G003", " Invalid Type Value"),
 
 	// Request Parameter 로 데이터가 전달되지 않을 경우
-	MISSING_REQUEST_PARAMETER_ERROR(HttpStatus.BAD_REQUEST, "G004", "Missing Servlet RequestParameter Exception"),
+	MISSING_REQUEST_PARAMETER_ERROR(BAD_REQUEST, "G004", "Missing Servlet RequestParameter Exception"),
 
 	// 입력/출력 값이 유효하지 않음
-	IO_ERROR(HttpStatus.BAD_REQUEST, "G005", "I/O Exception"),
+	IO_ERROR(BAD_REQUEST, "G005", "I/O Exception"),
 
 	// 권한이 없음
-	FORBIDDEN_ERROR(HttpStatus.FORBIDDEN, "G008", "Forbidden Exception"),
+	FORBIDDEN_ERROR(FORBIDDEN, "G008", "Forbidden Exception"),
 
 	// 서버로 요청한 리소스가 존재하지 않음
-	NOT_FOUND_ERROR(HttpStatus.NOT_FOUND, "G009", "Not Found Exception"),
+	NOT_FOUND_ERROR(NOT_FOUND, "G009", "Not Found Exception"),
 
 	// NULL Point Exception 발생
-	NULL_POINT_ERROR(HttpStatus.NOT_FOUND, "G010", "Null Point Exception"),
+	NULL_POINT_ERROR(NOT_FOUND, "G010", "Null Point Exception"),
 
 	// @RequestBody 및 @RequestParam, @PathVariable 값이 유효하지 않음
-	NOT_VALID_ERROR(HttpStatus.NOT_FOUND, "G011", "handle Validation Exception"),
+	NOT_VALID_ERROR(NOT_FOUND, "G011", "handle Validation Exception"),
 
 	// @RequestBody 및 @RequestParam, @PathVariable 값이 유효하지 않음
-	NOT_VALID_HEADER_ERROR(HttpStatus.NOT_FOUND, "G012", "Header에 데이터가 존재하지 않는 경우 "),
+	NOT_VALID_HEADER_ERROR(NOT_FOUND, "G012", "Header에 데이터가 존재하지 않는 경우 "),
 
 	// 서버가 처리 할 방법을 모르는 경우 발생
 	INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "G999", "Internal Server Error Exception"),
@@ -64,13 +66,27 @@ public enum GlobalErrorCode implements ErrorCode {
 	 * ******************************* Custom Error CodeList ***************************************
 	 */
 	// Transaction Insert Error
-	INSERT_ERROR(HttpStatus.OK, "9999", "Insert Transaction Error Exception"),
+	INSERT_ERROR(OK, "9999", "Insert Transaction Error Exception"),
 
 	// Transaction Update Error
-	UPDATE_ERROR(HttpStatus.OK, "9999", "Update Transaction Error Exception"),
+	UPDATE_ERROR(OK, "9999", "Update Transaction Error Exception"),
 
 	// Transaction Delete Error
-	DELETE_ERROR(HttpStatus.OK, "9999", "Delete Transaction Error Exception");
+	DELETE_ERROR(OK, "9999", "Delete Transaction Error Exception"),
+
+	// auth
+	ILLEGAL_REGISTRATION_ID(NOT_ACCEPTABLE, "1000", "잘못된 등록 ID입니다."),
+
+	TOKEN_EXPIRED(UNAUTHORIZED, "1001", "토큰이 만료되었습니다."),
+
+	INVALID_TOKEN(UNAUTHORIZED, "1002", "올바르지 않은 토큰입니다."),
+
+	INVALID_JWT_SIGNATURE(UNAUTHORIZED, "1003", "잘못된 JWT 시그니처입니다."),
+
+	TOKEN_NOT_FOUND(UNAUTHORIZED, "1004", "토큰을 찾지 못했습니다."),
+
+	//user
+	USER_NOT_FOUND(NOT_FOUND, "1005" , "사용자를 찾지 못했습니다.");
 
 	// 에러 코드의 '코드 상태'을 반환한다.
 	private final HttpStatus httpStatus;
