@@ -4,6 +4,7 @@ import static org.springframework.http.HttpStatus.*;
 
 import org.springframework.http.HttpStatus;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -17,7 +18,7 @@ import lombok.RequiredArgsConstructor;
  */
 
 @Getter
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public enum GlobalErrorCode implements ErrorCode {
 	/**
 	 * ******************************* Global Error CodeList ***************************************
@@ -85,8 +86,13 @@ public enum GlobalErrorCode implements ErrorCode {
 
 	TOKEN_NOT_FOUND(UNAUTHORIZED, "1004", "토큰을 찾지 못했습니다."),
 
+	TOKEN_ALREADY_EXIST(UNAUTHORIZED, "1005", "토큰이 이미 생성되었습니다!"),
+
+	REFRESH_TOKEN_EXPIRED(UNAUTHORIZED,"1006" , "리프레쉬 토큰이 만료되었습니다."),
+
+	TOKEN_UNSURPPORTED(UNAUTHORIZED,"1007" ,"지원되지 않는 토큰입니다." ),
 	//user
-	USER_NOT_FOUND(NOT_FOUND, "1005" , "사용자를 찾지 못했습니다.");
+	USER_NOT_FOUND(NOT_FOUND, "1005", "사용자를 찾지 못했습니다.");
 
 	// 에러 코드의 '코드 상태'을 반환한다.
 	private final HttpStatus httpStatus;
