@@ -5,12 +5,11 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.adit.backend.domain.auth.entity.Token;
-import com.adit.backend.domain.user.entity.User;
 
 public interface TokenRepository extends JpaRepository<Token, Long> {
 	Optional<Token> findByAccessToken(String accessToken);
 
-	void deleteByUser_SocialId(String userSocialId);
+	boolean existsByUser_SocialId(String socialId);
 
-	Optional<Token> findByUser(User user);
+	void deleteByAccessToken(String accessToken);
 }

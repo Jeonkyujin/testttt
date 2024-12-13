@@ -61,4 +61,9 @@ public record PrincipalDetails(
 	public boolean isEnabled() {
 		return true;
 	}
+
+	public User getUser() {
+		return user();
+	}
+
 }
