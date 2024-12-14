@@ -16,8 +16,9 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Entity
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Builder
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class Token {
 
 	@Id
@@ -33,13 +34,6 @@ public class Token {
 
 	@Column(name = "access_token", nullable = false, unique = true)
 	private String accessToken;
-
-	@Builder
-	public Token(User user, String refreshToken, String accessToken) {
-		this.user = user;
-		this.refreshToken = refreshToken;
-		this.accessToken = accessToken;
-	}
 
 	public Token updateRefreshToken(String refreshToken) {
 		this.refreshToken = refreshToken;

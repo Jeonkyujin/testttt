@@ -34,7 +34,11 @@ public class TokenService {
 		User user = userRepository.findBySocialId(socialId).orElseThrow(() -> new BusinessException(USER_NOT_FOUND));
 		Token token = tokenRepository.findByAccessToken(accessToken)
 			.map(o -> o.updateRefreshToken(refreshToken))
-			.orElseGet(() -> new Token(user, refreshToken, accessToken));
+			.orElseGet(() -> Token.builder()
+				.user(user)
+				.refreshToken(refreshToken)
+				.accessToken(accessToken)
+				.build());
 		tokenRepository.save(token);
 		log.info("Token successfully saved or updated for socialId: {}", socialId);
 	}
