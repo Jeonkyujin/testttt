@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 @Entity
 @Getter
 @Builder
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class Token {
 
@@ -26,7 +28,7 @@ public class Token {
 	private Long id;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "social_id", referencedColumnName = "socialId", unique = true)
+	@JoinColumn(name = "social_id", referencedColumnName = "social_id", unique = true)
 	private User user;
 
 	@Column(name = "refresh_token", nullable = false)

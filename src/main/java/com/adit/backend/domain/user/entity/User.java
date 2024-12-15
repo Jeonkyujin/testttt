@@ -46,7 +46,7 @@ public class User extends BaseEntity {
 	@Column(nullable = false)
 	private String profile;
 
-	@Column(nullable = false, unique = true)
+	@Column(name = "social_id", nullable = false, unique = true)
 	private String socialId;
 
 	@Enumerated(EnumType.STRING)
