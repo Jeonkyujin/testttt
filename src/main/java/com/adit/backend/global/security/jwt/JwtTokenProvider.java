@@ -35,14 +35,17 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 @Component
 public class JwtTokenProvider {
-
-	private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30L;
-	private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60L * 24L * 7L;
 	private static final String KEY_ROLE = "role";
 	private final TokenService tokenService;
+
 	@Value("${jwt.key}")
 	private String key;
+
 	private SecretKey secretKey;
+	@Value("${jwt.access.token.expiration}")
+	private long accessTokenExpireTime;
+	@Value("${jwt.refresh.token.expiration}")
+	private long getAccessTokenExpireTime;
 
 	@PostConstruct
 	private void setSecretKey() {
@@ -50,12 +53,12 @@ public class JwtTokenProvider {
 	}
 
 	public String generateAccessToken(Authentication authentication) {
-		return generateToken(authentication, ACCESS_TOKEN_EXPIRE_TIME);
+		return generateToken(authentication, accessTokenExpireTime);
 	}
 
 	// 1. refresh token 발급
 	public String generateRefreshToken(Authentication authentication, String accessToken) {
-		String refreshToken = generateToken(authentication, REFRESH_TOKEN_EXPIRE_TIME);
+		String refreshToken = generateToken(authentication, getAccessTokenExpireTime);
 		tokenService.saveOrUpdate(authentication.getName(), refreshToken, accessToken);
 		return refreshToken;
 	}
