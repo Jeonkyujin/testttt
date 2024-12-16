@@ -31,6 +31,7 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -191,6 +192,13 @@ public class JwtTokenProvider {
 		return Optional.ofNullable(request.getHeader(accessHeader))
 			.filter(refreshToken -> refreshToken.startsWith(BEARER))
 			.map(refreshToken -> refreshToken.replace(BEARER, ""));
+	}
+
+	public void sendAccessAndRefreshToken(HttpServletResponse response, String accessToken, String refreshToken) {
+		response.setStatus(HttpServletResponse.SC_OK);
+		response.setHeader(accessHeader, accessToken);
+		response.setHeader(refreshHeader, refreshToken);
+		log.info("Access Token, Refresh Token 헤더 설정 완료");
 	}
 
 }

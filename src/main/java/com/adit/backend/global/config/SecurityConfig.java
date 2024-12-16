@@ -2,7 +2,6 @@ package com.adit.backend.global.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -13,7 +12,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.adit.backend.domain.auth.service.PrincipalDetailsService;
 import com.adit.backend.global.security.jwt.CustomAuthenticationEntryPoint;
 import com.adit.backend.global.security.jwt.filter.JwtAuthenticationFilter;
 import com.adit.backend.global.security.jwt.filter.TokenExceptionFilter;
@@ -37,7 +35,6 @@ public class SecurityConfig {
 	private final CustomOAuth2UserService oAuth2UserService;
 	private final OAuth2SuccessHandler oAuth2SuccessHandler;
 	private final JwtAuthenticationFilter tokenAuthenticationFilter;
-	private final PrincipalDetailsService principalDetailsService;
 
 	@Bean
 	public WebSecurityCustomizer webSecurityCustomizer() {
@@ -85,18 +82,12 @@ public class SecurityConfig {
 				).permitAll()
 				.anyRequest().authenticated()
 			)
-			.addFilterBefore(tokenAuthenticationFilter,
-				UsernamePasswordAuthenticationFilter.class)
-			.addFilterBefore(new TokenExceptionFilter(),
-				tokenAuthenticationFilter.getClass())
+			.addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+			.addFilterBefore(new TokenExceptionFilter(), tokenAuthenticationFilter.getClass())
 			.exceptionHandling(exceptions -> exceptions
 				.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
 				.accessDeniedHandler(new CustomAccessDeniedHandler()));
 
 		return http.build();
-	}
-
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(principalDetailsService);
 	}
 }

@@ -16,8 +16,10 @@ import com.adit.backend.domain.user.repository.UserRepository;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
@@ -26,6 +28,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 	@Override
 	@Transactional
 	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+
+		log.info("CustomOAuth2UserService.loadUser() 실행 - OAuth2 로그인 요청 진입");
+
 		// 유저 정보 가져오기
 		Map<String, Object> oAuth2UserAttributes = super.loadUser(userRequest).getAttributes();
 
@@ -37,7 +42,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
 		// OAuth2UserInfo 생성
 		OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfo.of(registrationId, oAuth2UserAttributes);
-
 		// 유저 생성 또는 업데이트
 		User user = getOrSaveUser(oAuth2UserInfo);
 
