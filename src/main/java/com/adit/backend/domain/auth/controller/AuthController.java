@@ -8,9 +8,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.adit.backend.domain.auth.dto.model.PrincipalDetails;
-import com.adit.backend.domain.auth.dto.response.LoginResponse;
-import com.adit.backend.domain.auth.service.TokenService;
+import com.adit.backend.domain.auth.dto.request.AuthLoginRequest;
+import com.adit.backend.domain.auth.dto.response.AuthLoginResponse;
 import com.adit.backend.global.common.ApiResponse;
+import com.adit.backend.global.security.jwt.TokenService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -24,11 +25,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class AuthController {
 
-	private final TokenService tokenService;
+	private TokenService tokenService;
 
-	@GetMapping("/success")
-	public ResponseEntity<ApiResponse<LoginResponse>> success(@Valid LoginResponse loginResponse) {
-		return ResponseEntity.ok(ApiResponse.success(loginResponse));
+	@GetMapping("/kakao")
+	public ResponseEntity<ApiResponse<AuthLoginResponse>> success(@Valid AuthLoginRequest authLoginRequest) {
+		return ResponseEntity.ok(ApiResponse.success(AuthLoginResponse.builder()
+			.accessToken(authLoginRequest.accessToken())
+			.refreshToken(authLoginRequest.refreshToken())
+			.build()));
 	}
 
 	@Operation(security = {@SecurityRequirement(name = "bearerAuth")})
@@ -36,7 +40,6 @@ public class AuthController {
 	public ResponseEntity<ApiResponse<Void>> logout(
 		@Parameter(hidden = true) @AuthenticationPrincipal PrincipalDetails principalDetails,
 		@Parameter(hidden = true) @RequestHeader("Authorization") String accessToken) {
-		tokenService.logout(principalDetails.getUser().getSocialId(), accessToken);
 		return ResponseEntity.noContent().build();
 	}
 }

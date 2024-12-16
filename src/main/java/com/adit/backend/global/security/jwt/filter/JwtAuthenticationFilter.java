@@ -44,13 +44,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				.filter(tokenProvider::validateRefreshToken)
 				.orElse(null);
 
-			if (refreshToken != null) {
+			if (refreshToken != null && (accessToken == null || !tokenProvider.validateAccessToken(accessToken))) {
 				String newAccessToken = tokenProvider.checkRefreshTokenAndReIssueAccessToken(
-					tokenProvider.getAuthentication(accessToken),
-					refreshToken);
+					tokenProvider.getAuthentication(accessToken), refreshToken);
 				setAuthentication(newAccessToken);
 				return;
-			} else {
+			} else if (refreshToken == null) {
 				checkAccessTokenAndAuthentication(request, response, filterChain);
 			}
 		} catch (ServletException e) {

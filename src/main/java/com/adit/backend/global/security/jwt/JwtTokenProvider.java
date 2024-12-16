@@ -20,7 +20,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import com.adit.backend.domain.auth.entity.Token;
-import com.adit.backend.domain.auth.service.TokenService;
 import com.adit.backend.global.error.exception.TokenException;
 
 import io.jsonwebtoken.Claims;
@@ -76,10 +75,6 @@ public class JwtTokenProvider {
 		}
 	}
 
-	public String generateAccessToken(Authentication authentication) {
-		return generateToken(authentication, accessTokenExpirationPeriod);
-	}
-
 	private String generateToken(Authentication authentication, long expireTime) {
 		Date now = new Date();
 		Date expiredDate = new Date(now.getTime() + expireTime);
@@ -97,11 +92,13 @@ public class JwtTokenProvider {
 			.compact();
 	}
 
+	public String generateAccessToken(Authentication authentication) {
+		return generateToken(authentication, accessTokenExpirationPeriod);
+	}
+
 	// 1. refresh token 발급
-	public String generateRefreshToken(Authentication authentication, String accessToken) {
-		String refreshToken = generateToken(authentication, refreshTokenExpirationPeriod);
-		tokenService.saveOrUpdate(authentication.getName(), refreshToken, accessToken);
-		return refreshToken;
+	public String generateRefreshToken(Authentication authentication) {
+		return generateToken(authentication, refreshTokenExpirationPeriod);
 	}
 
 	private Authentication createAuthentication(Claims claims, String token) {
@@ -151,7 +148,7 @@ public class JwtTokenProvider {
 	}
 
 	public String reissueRefreshToken(Authentication authentication, Token token) {
-		String reIssuedRefreshToken = generateRefreshToken(authentication, token.getAccessToken());
+		String reIssuedRefreshToken = generateRefreshToken(authentication);
 		tokenService.updateRefreshToken(reIssuedRefreshToken, token);
 		return reIssuedRefreshToken;
 	}

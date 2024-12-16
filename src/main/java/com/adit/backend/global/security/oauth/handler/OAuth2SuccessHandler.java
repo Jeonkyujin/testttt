@@ -11,9 +11,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.adit.backend.domain.auth.dto.model.PrincipalDetails;
-import com.adit.backend.domain.auth.service.TokenService;
 import com.adit.backend.global.error.exception.BusinessException;
 import com.adit.backend.global.security.jwt.JwtTokenProvider;
+import com.adit.backend.global.security.jwt.TokenService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
-	private static final String REDIRECT_URI = "/api/auth/success";
+	private static final String REDIRECT_URI = "/api/auth/kakao";
 	@Value("${jwt.access.expiration}")
 	private Long accessTokenExpirationPeriod;
 
@@ -41,12 +41,11 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
 			PrincipalDetails userDetails = getUserDetails(authentication);
 			String accessToken = tokenProvider.generateAccessToken(authentication);
-			String refreshToken = tokenProvider.generateRefreshToken(authentication, accessToken);
+			String refreshToken = tokenProvider.generateRefreshToken(authentication);
 
 			tokenService.saveOrUpdate(userDetails.getUsername(), refreshToken, accessToken);
 			tokenProvider.sendAccessAndRefreshToken(response, accessToken, refreshToken);
 
-			// 프론트엔드 리다이렉트 URL에 토큰 정보를 포함
 			String targetUrl = UriComponentsBuilder.fromUriString(REDIRECT_URI)
 				.queryParam("accessToken", accessToken)
 				.queryParam("refreshToken", refreshToken)
