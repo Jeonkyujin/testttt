@@ -1,4 +1,4 @@
-package com.adit.backend.domain.user.entity;
+package com.adit.backend.domain.user.enums;
 
 import lombok.AccessLevel;
 import lombok.Getter;

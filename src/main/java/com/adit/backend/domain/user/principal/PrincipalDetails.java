@@ -1,4 +1,4 @@
-package com.adit.backend.domain.auth.dto.model;
+package com.adit.backend.domain.user.principal;
 
 import java.util.Collection;
 import java.util.Collections;

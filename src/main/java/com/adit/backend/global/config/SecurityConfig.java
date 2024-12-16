@@ -12,13 +12,13 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.adit.backend.global.security.jwt.CustomAuthenticationEntryPoint;
 import com.adit.backend.global.security.jwt.filter.JwtAuthenticationFilter;
 import com.adit.backend.global.security.jwt.filter.TokenExceptionFilter;
 import com.adit.backend.global.security.jwt.handler.CustomAccessDeniedHandler;
-import com.adit.backend.global.security.oauth.CustomOAuth2UserService;
+import com.adit.backend.global.security.jwt.handler.CustomAuthenticationEntryPoint;
 import com.adit.backend.global.security.oauth.handler.OAuth2FailureHandler;
 import com.adit.backend.global.security.oauth.handler.OAuth2SuccessHandler;
+import com.adit.backend.global.security.oauth.service.CustomOAuth2UserService;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -57,15 +57,18 @@ public class SecurityConfig {
 			.logout(AbstractHttpConfigurer::disable)
 			.headers(c -> c.frameOptions(
 				HeadersConfigurer.FrameOptionsConfig::disable).disable())
+
 			// 세션 정책 수정
 			.sessionManagement(session ->
 				session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
 			// OAuth2 설정 중복 제거
 			.oauth2Login(oauth2 -> {
 				oauth2.userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService));
 				oauth2.successHandler(oAuth2SuccessHandler);
 				oauth2.failureHandler(new OAuth2FailureHandler());
 			})
+
 			// 인증 경로 설정 수정
 			.authorizeHttpRequests(request -> request
 				.requestMatchers(
@@ -82,8 +85,10 @@ public class SecurityConfig {
 				).permitAll()
 				.anyRequest().authenticated()
 			)
+
 			.addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 			.addFilterBefore(new TokenExceptionFilter(), tokenAuthenticationFilter.getClass())
+
 			.exceptionHandling(exceptions -> exceptions
 				.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
 				.accessDeniedHandler(new CustomAccessDeniedHandler()));

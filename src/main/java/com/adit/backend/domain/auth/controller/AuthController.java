@@ -7,11 +7,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.adit.backend.domain.auth.dto.model.PrincipalDetails;
 import com.adit.backend.domain.auth.dto.request.AuthLoginRequest;
 import com.adit.backend.domain.auth.dto.response.AuthLoginResponse;
+import com.adit.backend.domain.user.principal.PrincipalDetails;
 import com.adit.backend.global.common.ApiResponse;
-import com.adit.backend.global.security.jwt.TokenService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -24,8 +23,6 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class AuthController {
-
-	private TokenService tokenService;
 
 	@GetMapping("/kakao")
 	public ResponseEntity<ApiResponse<AuthLoginResponse>> success(@Valid AuthLoginRequest authLoginRequest) {

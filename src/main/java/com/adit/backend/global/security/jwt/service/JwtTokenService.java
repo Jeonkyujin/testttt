@@ -1,4 +1,4 @@
-package com.adit.backend.global.security.jwt;
+package com.adit.backend.global.security.jwt.service;
 
 import static com.adit.backend.global.error.GlobalErrorCode.*;
 
@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 @Transactional
-public class TokenService {
+public class JwtTokenService {
 
 	private static final String KAKAO_LOGOUT_URL = "https://kapi.kakao.com/v1/user/logout";
 	private final TokenRepository tokenRepository;
@@ -34,9 +34,9 @@ public class TokenService {
 		tokenRepository.findByUserWithFetch(socialId)
 			.ifPresentOrElse(
 				token -> {
+					log.info("발급된 토큰이 존재합니다. 업데이트합니다.");
 					token.updateRefreshToken(refreshToken);
 					token.updateAccessToken(accessToken);
-					log.info("발급된 토큰이 존재합니다. 업데이트합니다.");
 				},
 				() -> {
 					log.info("발급된 토큰이 존재하지 않습니다 발급합니다.");

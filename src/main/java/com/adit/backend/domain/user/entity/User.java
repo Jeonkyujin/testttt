@@ -6,6 +6,8 @@ import java.util.List;
 import com.adit.backend.domain.auth.entity.Token;
 import com.adit.backend.domain.event.entity.Event;
 import com.adit.backend.domain.place.entity.UserPlace;
+import com.adit.backend.domain.user.enums.Role;
+import com.adit.backend.domain.user.enums.SocialType;
 import com.adit.backend.global.entity.BaseEntity;
 
 import jakarta.persistence.CascadeType;

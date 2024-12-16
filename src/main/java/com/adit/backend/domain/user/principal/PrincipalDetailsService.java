@@ -1,4 +1,4 @@
-package com.adit.backend.domain.auth.service;
+package com.adit.backend.domain.user.principal;
 
 import static com.adit.backend.global.error.GlobalErrorCode.*;
 
@@ -10,15 +10,15 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.adit.backend.domain.auth.dto.model.PrincipalDetails;
 import com.adit.backend.domain.user.entity.User;
 import com.adit.backend.domain.user.repository.UserRepository;
 import com.adit.backend.global.error.exception.BusinessException;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 @Transactional(readOnly = true)
 public class PrincipalDetailsService implements UserDetailsService {
 

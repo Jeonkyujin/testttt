@@ -10,12 +10,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.adit.backend.domain.auth.dto.model.PrincipalDetails;
-import com.adit.backend.domain.auth.service.PrincipalDetailsService;
+import com.adit.backend.domain.user.principal.PrincipalDetails;
+import com.adit.backend.domain.user.principal.PrincipalDetailsService;
 import com.adit.backend.domain.user.repository.UserRepository;
 import com.adit.backend.global.error.exception.BusinessException;
 import com.adit.backend.global.error.exception.TokenException;
-import com.adit.backend.global.security.jwt.JwtTokenProvider;
+import com.adit.backend.global.security.jwt.util.JwtTokenProvider;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -38,13 +38,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		FilterChain filterChain) {
 		try {
 			String accessToken = tokenProvider.extractAccessToken(request)
-				.filter(tokenProvider::validateAccessToken)
+				.filter(tokenProvider::isAccessTokenValid)
 				.orElse(null);
 			String refreshToken = tokenProvider.extractRefreshToken(request)
-				.filter(tokenProvider::validateRefreshToken)
+				.filter(tokenProvider::isRefreshTokenValid)
 				.orElse(null);
 
-			if (refreshToken != null && (accessToken == null || !tokenProvider.validateAccessToken(accessToken))) {
+			if (refreshToken != null && (accessToken == null || !tokenProvider.isAccessTokenValid(accessToken))) {
 				String newAccessToken = tokenProvider.checkRefreshTokenAndReIssueAccessToken(
 					tokenProvider.getAuthentication(accessToken), refreshToken);
 				setAuthentication(newAccessToken);
@@ -63,7 +63,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		FilterChain filterChain) throws ServletException, IOException {
 		log.info("checkAccessTokenAndAuthentication() 호출");
 		tokenProvider.extractAccessToken(request)
-			.filter(tokenProvider::validateAccessToken)
+			.filter(tokenProvider::isAccessTokenValid)
 			.ifPresent(accessToken -> tokenProvider.getSocialId(accessToken)
 				.ifPresent(socialId -> userRepository.findBySocialId(socialId)
 					.ifPresent(user -> setAuthentication(accessToken))));

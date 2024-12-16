@@ -1,4 +1,4 @@
-package com.adit.backend.global.security.oauth;
+package com.adit.backend.global.security.oauth.service;
 
 import java.util.Map;
 
@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.adit.backend.domain.auth.dto.OAuth2UserInfo;
-import com.adit.backend.domain.auth.dto.model.PrincipalDetails;
 import com.adit.backend.domain.user.entity.User;
+import com.adit.backend.domain.user.principal.PrincipalDetails;
 import com.adit.backend.domain.user.repository.UserRepository;
 
 import lombok.AccessLevel;

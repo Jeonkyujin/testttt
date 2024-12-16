@@ -10,10 +10,10 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.adit.backend.domain.auth.dto.model.PrincipalDetails;
+import com.adit.backend.domain.user.principal.PrincipalDetails;
 import com.adit.backend.global.error.exception.BusinessException;
-import com.adit.backend.global.security.jwt.JwtTokenProvider;
-import com.adit.backend.global.security.jwt.TokenService;
+import com.adit.backend.global.security.jwt.service.JwtTokenService;
+import com.adit.backend.global.security.jwt.util.JwtTokenProvider;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,7 +31,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 	private Long accessTokenExpirationPeriod;
 
 	private final JwtTokenProvider tokenProvider;
-	private final TokenService tokenService;
+	private final JwtTokenService jwtTokenService;
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request,
@@ -43,7 +43,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 			String accessToken = tokenProvider.generateAccessToken(authentication);
 			String refreshToken = tokenProvider.generateRefreshToken(authentication);
 
-			tokenService.saveOrUpdate(userDetails.getUsername(), refreshToken, accessToken);
+			jwtTokenService.saveOrUpdate(userDetails.getUsername(), refreshToken, accessToken);
 			tokenProvider.sendAccessAndRefreshToken(response, accessToken, refreshToken);
 
 			String targetUrl = UriComponentsBuilder.fromUriString(REDIRECT_URI)

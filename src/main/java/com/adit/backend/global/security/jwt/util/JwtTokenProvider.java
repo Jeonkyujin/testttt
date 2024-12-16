@@ -1,4 +1,4 @@
-package com.adit.backend.global.security.jwt;
+package com.adit.backend.global.security.jwt.util;
 
 import static com.adit.backend.global.error.GlobalErrorCode.*;
 
@@ -21,6 +21,7 @@ import org.springframework.util.StringUtils;
 
 import com.adit.backend.domain.auth.entity.Token;
 import com.adit.backend.global.error.exception.TokenException;
+import com.adit.backend.global.security.jwt.service.JwtTokenService;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -35,23 +36,28 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-@Component
 @Slf4j
+@Component
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class JwtTokenProvider {
 	@Value("${jwt.key}")
 	private String key;
 
 	private static final String BEARER = "Bearer ";
 	private static final String KEY_ROLE = "role";
+
 	private static SecretKey secretKey;
-	private final TokenService tokenService;
+	private final JwtTokenService jwtTokenService;
+
 	@Value("${jwt.access.expiration}")
 	private Long accessTokenExpirationPeriod;
+
 	@Value("${jwt.refresh.expiration}")
 	private Long refreshTokenExpirationPeriod;
+
 	@Value("${jwt.access.header}")
 	private String accessHeader;
+
 	@Value("${jwt.refresh.header}")
 	private String refreshHeader;
 
@@ -101,41 +107,26 @@ public class JwtTokenProvider {
 		return generateToken(authentication, refreshTokenExpirationPeriod);
 	}
 
-	private Authentication createAuthentication(Claims claims, String token) {
-		List<SimpleGrantedAuthority> authorities = getAuthorities(claims);
-		User principal = new User(claims.getSubject(), "", authorities);
-		return new UsernamePasswordAuthenticationToken(principal, token, authorities);
-	}
-
-	private List<SimpleGrantedAuthority> getAuthorities(Claims claims) {
-		return Collections.singletonList(new SimpleGrantedAuthority(
-			claims.get(KEY_ROLE).toString()));
-	}
-
-	public Authentication getAuthentication(String token) {
-		try {
-			Claims parsedClaims = parseClaims(token);
-			return createAuthentication(parsedClaims, token);
-		} catch (ExpiredJwtException e) {
-			throw new TokenException(ACCESS_TOKEN_EXPIRED);
-		}
-	}
-
-	// 3. accessToken 재발급
 	public String checkRefreshTokenAndReIssueAccessToken(Authentication authentication, String refreshToken) {
-		Token token = tokenService.findByAccessTokenOrThrow(refreshToken);
-		if (validateRefreshToken(refreshToken)) {
+		Token token = jwtTokenService.findByAccessTokenOrThrow(refreshToken);
+		if (isRefreshTokenValid(refreshToken)) {
 			String reIssuedRefreshToken = reissueRefreshToken(authentication, token);
-			String reissueAccessToken = generateAccessToken(getAuthentication(reIssuedRefreshToken));
-			tokenService.updateAccessToken(reissueAccessToken, token);
-			return reissueAccessToken;
+			String reIssueAccessToken = generateAccessToken(getAuthentication(reIssuedRefreshToken));
+			jwtTokenService.updateAccessToken(reIssueAccessToken, token);
+			return reIssueAccessToken;
 		} else {
 			throw new TokenException(REFRESH_TOKEN_EXPIRED);
 		}
 
 	}
 
-	public boolean validateRefreshToken(String refreshToken) {
+	public String reissueRefreshToken(Authentication authentication, Token token) {
+		String reIssuedRefreshToken = generateRefreshToken(authentication);
+		jwtTokenService.updateRefreshToken(reIssuedRefreshToken, token);
+		return reIssuedRefreshToken;
+	}
+
+	public boolean isRefreshTokenValid(String refreshToken) {
 		try {
 			Claims claims = parseClaims(refreshToken);
 			return claims.getExpiration().after(new Date());
@@ -147,13 +138,7 @@ public class JwtTokenProvider {
 		return false;
 	}
 
-	public String reissueRefreshToken(Authentication authentication, Token token) {
-		String reIssuedRefreshToken = generateRefreshToken(authentication);
-		tokenService.updateRefreshToken(reIssuedRefreshToken, token);
-		return reIssuedRefreshToken;
-	}
-
-	public boolean validateAccessToken(String accessToken) {
+	public boolean isAccessTokenValid(String accessToken) {
 		try {
 			if (!StringUtils.hasText(accessToken)) {
 				throw new TokenException(TOKEN_NOT_FOUND);
@@ -174,19 +159,14 @@ public class JwtTokenProvider {
 		}
 	}
 
-	public Optional<String> getSocialId(String token) {
-		Claims claims = parseClaims(token);
-		return Optional.ofNullable(claims.getSubject());
-	}
-
-	public Optional<String> extractRefreshToken(HttpServletRequest request) {
-		return Optional.ofNullable(request.getHeader(refreshHeader))
+	public Optional<String> extractAccessToken(HttpServletRequest request) {
+		return Optional.ofNullable(request.getHeader(accessHeader))
 			.filter(refreshToken -> refreshToken.startsWith(BEARER))
 			.map(refreshToken -> refreshToken.replace(BEARER, ""));
 	}
 
-	public Optional<String> extractAccessToken(HttpServletRequest request) {
-		return Optional.ofNullable(request.getHeader(accessHeader))
+	public Optional<String> extractRefreshToken(HttpServletRequest request) {
+		return Optional.ofNullable(request.getHeader(refreshHeader))
 			.filter(refreshToken -> refreshToken.startsWith(BEARER))
 			.map(refreshToken -> refreshToken.replace(BEARER, ""));
 	}
@@ -198,4 +178,28 @@ public class JwtTokenProvider {
 		log.info("Access Token, Refresh Token 헤더 설정 완료");
 	}
 
+	private Authentication createAuthentication(Claims claims, String token) {
+		List<SimpleGrantedAuthority> authorities = getAuthorities(claims);
+		User principal = new User(claims.getSubject(), "", authorities);
+		return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+	}
+
+	public Authentication getAuthentication(String token) {
+		try {
+			Claims parsedClaims = parseClaims(token);
+			return createAuthentication(parsedClaims, token);
+		} catch (ExpiredJwtException e) {
+			throw new TokenException(ACCESS_TOKEN_EXPIRED);
+		}
+	}
+
+	private List<SimpleGrantedAuthority> getAuthorities(Claims claims) {
+		return Collections.singletonList(new SimpleGrantedAuthority(
+			claims.get(KEY_ROLE).toString()));
+	}
+
+	public Optional<String> getSocialId(String token) {
+		Claims claims = parseClaims(token);
+		return Optional.ofNullable(claims.getSubject());
+	}
 }

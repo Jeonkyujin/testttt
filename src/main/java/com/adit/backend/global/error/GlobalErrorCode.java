@@ -60,6 +60,8 @@ public enum GlobalErrorCode implements ErrorCode {
 	// @RequestBody 및 @RequestParam, @PathVariable 값이 유효하지 않음
 	NOT_VALID_HEADER_ERROR(NOT_FOUND, "G012", "Header에 데이터가 존재하지 않는 경우 "),
 
+	SERVLET_ERROR(BAD_REQUEST, "G013" , "Servlet Exception" ),
+
 	// 서버가 처리 할 방법을 모르는 경우 발생
 	INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "G999", "Internal Server Error Exception"),
 
@@ -78,7 +80,7 @@ public enum GlobalErrorCode implements ErrorCode {
 	// auth
 	ILLEGAL_REGISTRATION_ID(NOT_ACCEPTABLE, "1000", "잘못된 등록 ID입니다."),
 
-	TOKEN_EXPIRED(UNAUTHORIZED, "1001", "토큰이 만료되었습니다."),
+	ACCESS_TOKEN_EXPIRED(UNAUTHORIZED, "1001", "토큰이 만료되었습니다."),
 
 	INVALID_TOKEN(UNAUTHORIZED, "1002", "올바르지 않은 토큰입니다."),
 

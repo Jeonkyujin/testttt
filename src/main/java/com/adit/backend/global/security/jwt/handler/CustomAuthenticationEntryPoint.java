@@ -1,4 +1,4 @@
-package com.adit.backend.global.security.jwt;
+package com.adit.backend.global.security.jwt.handler;
 
 import java.io.IOException;
 

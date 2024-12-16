@@ -4,9 +4,9 @@ import static com.adit.backend.global.error.GlobalErrorCode.*;
 
 import java.util.Map;
 
-import com.adit.backend.domain.auth.exception.AuthException;
-import com.adit.backend.domain.user.entity.Role;
 import com.adit.backend.domain.user.entity.User;
+import com.adit.backend.domain.user.enums.Role;
+import com.adit.backend.global.security.jwt.exception.AuthException;
 import com.adit.backend.global.util.KeyGenerator;
 
 import lombok.Builder;
