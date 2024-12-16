@@ -1,7 +1,5 @@
 package com.adit.backend.domain.auth.controller;
 
-import static com.adit.backend.global.security.jwt.filter.JwtAuthenticationFilter.*;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,11 +31,11 @@ public class AuthController {
 		return ResponseEntity.ok(ApiResponse.success(loginResponse));
 	}
 
-	@Operation(security = { @SecurityRequirement(name = "bearerAuth") })
+	@Operation(security = {@SecurityRequirement(name = "bearerAuth")})
 	@GetMapping("/logout")
 	public ResponseEntity<ApiResponse<Void>> logout(
 		@Parameter(hidden = true) @AuthenticationPrincipal PrincipalDetails principalDetails,
-		@Parameter(hidden = true) @RequestHeader(AUTHORIZATION_HEADER) String accessToken) {
+		@Parameter(hidden = true) @RequestHeader("Authorization") String accessToken) {
 		tokenService.logout(principalDetails.getUser().getSocialId(), accessToken);
 		return ResponseEntity.noContent().build();
 	}

@@ -45,4 +45,5 @@ public class Token {
 	public void updateAccessToken(String accessToken) {
 		this.accessToken = accessToken;
 	}
+
 }

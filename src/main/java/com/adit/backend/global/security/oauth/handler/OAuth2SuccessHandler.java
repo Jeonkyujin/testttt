@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
 	private static final String REDIRECT_URI = "/api/auth/success";
-	private static final String TOKEN_PREFIX = "Bearer ";
+	private static final String BEARER = "Bearer ";
 	private static final String HEADER_AUTHORIZATION = "Authorization";
 	private static final String HEADER_REFRESH_TOKEN = "Refresh-Token";
 

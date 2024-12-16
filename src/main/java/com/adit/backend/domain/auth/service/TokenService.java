@@ -49,13 +49,18 @@ public class TokenService {
 		}
 	}
 
-	public Token findByAccessTokenOrThrow(String accessToken) {
-		return tokenRepository.findByAccessToken(accessToken)
-			.orElseThrow(() -> new TokenException(TOKEN_EXPIRED));
+	public Token findByAccessTokenOrThrow(String refreshToken) {
+		return tokenRepository.findTokenByRefreshToken(refreshToken)
+			.orElseThrow(() -> new TokenException(TOKEN_NOT_FOUND));
 	}
 
-	public void updateToken(String accessToken, Token token) {
+	public void updateAccessToken(String accessToken, Token token) {
 		token.updateAccessToken(accessToken);
+		tokenRepository.save(token);
+	}
+
+	public void updateRefreshToken(String refreshToken, Token token) {
+		token.updateRefreshToken(refreshToken);
 		tokenRepository.save(token);
 	}
 

@@ -40,8 +40,9 @@ spring:
 jwt:
   key: ${JWT_KEY}
   access:
-    token:
-      expiration: ${JWT_ACCESS_TOKEN_EXPIRATION}
+    expiration: 3600000 # 1시간(60분) (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h))
+    header: Authorization
+
   refresh:
-    token:
-      expiration: ${JWT_REFRESH_TOKEN_EXPIRATION}
+    expiration: 1209600000 #  (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h) * 24L(h -> 하루) * 14(2주))
+    header: Authorization-refresh

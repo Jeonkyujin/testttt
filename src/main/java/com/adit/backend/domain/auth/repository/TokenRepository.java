@@ -12,4 +12,6 @@ public interface TokenRepository extends JpaRepository<Token, Long> {
 	boolean existsByUser_SocialId(String socialId);
 
 	void deleteByAccessToken(String accessToken);
+
+	Optional<Token> findTokenByRefreshToken(String refreshToken);
 }
