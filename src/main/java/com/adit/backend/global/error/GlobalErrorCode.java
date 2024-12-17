@@ -94,7 +94,10 @@ public enum GlobalErrorCode implements ErrorCode {
 
 	TOKEN_UNSURPPORTED(UNAUTHORIZED,"1007" ,"지원되지 않는 토큰입니다." ),
 	//user
-	USER_NOT_FOUND(NOT_FOUND, "1005", "사용자를 찾지 못했습니다.");
+	USER_NOT_FOUND(NOT_FOUND, "1005", "사용자를 찾지 못했습니다."),
+
+	NICKNAME_ALREADY_EXIST(BAD_REQUEST, "1006", "이미 존재하는 닉네임입니다.");
+
 
 	// 에러 코드의 '코드 상태'을 반환한다.
 	private final HttpStatus httpStatus;
