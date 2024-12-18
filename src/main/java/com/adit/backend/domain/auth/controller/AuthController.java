@@ -1,21 +1,19 @@
 package com.adit.backend.domain.auth.controller;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import com.adit.backend.domain.auth.dto.request.AuthLoginRequest;
-import com.adit.backend.domain.auth.dto.response.AuthLoginResponse;
-import com.adit.backend.domain.user.principal.PrincipalDetails;
+import com.adit.backend.domain.auth.dto.response.KakaoTokenResponseDto;
+import com.adit.backend.domain.auth.service.AuthService;
 import com.adit.backend.global.common.ApiResponse;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
@@ -23,20 +21,34 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class AuthController {
+	private final AuthService authService;
+	@Value("${spring.security.oauth2.client.provider.kakao.authorization-uri}")
+	private String authorizationUri;
+	@Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
+	private String redirectUri;
+	@Value("${spring.security.oauth2.client.registration.kakao.client-id}")
+	private String clientId;
 
 	@GetMapping("/kakao")
-	public ResponseEntity<ApiResponse<AuthLoginResponse>> success(@Valid AuthLoginRequest authLoginRequest) {
-		return ResponseEntity.ok(ApiResponse.success(AuthLoginResponse.builder()
-			.accessToken(authLoginRequest.accessToken())
-			.refreshToken(authLoginRequest.refreshToken())
-			.build()));
+	public ResponseEntity<String> kakaoLogin() {
+		String kakaoAuthUrl = UriComponentsBuilder
+			.fromUriString(authorizationUri)
+			.queryParam("client_id", clientId)
+			.queryParam("redirect_uri", redirectUri)
+			.queryParam("response_type", "code")
+			.build()
+			.toUriString();
+		return ResponseEntity.ok("redirect:/" + kakaoAuthUrl);
 	}
 
-	@Operation(security = {@SecurityRequirement(name = "bearerAuth")})
-	@GetMapping("/logout")
-	public ResponseEntity<ApiResponse<Void>> logout(
-		@Parameter(hidden = true) @AuthenticationPrincipal PrincipalDetails principalDetails,
-		@Parameter(hidden = true) @RequestHeader("Authorization") String accessToken) {
-		return ResponseEntity.noContent().build();
+	@GetMapping("/kakao/callback")
+	public ResponseEntity<ApiResponse<KakaoTokenResponseDto>> kakaoCallback(@RequestParam String code) {
+		return ResponseEntity.ok(ApiResponse.success(authService.getKakaoAccessToken(code)));
+	}
+
+	@PostMapping("/logout")
+	public ResponseEntity<Void> logout(@RequestHeader("Authorization") String accessToken) {
+		authService.logout(accessToken);
+		return ResponseEntity.ok().build();
 	}
 }
