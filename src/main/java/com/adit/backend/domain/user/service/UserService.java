@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.adit.backend.domain.auth.dto.OAuth2UserInfo;
 import com.adit.backend.domain.auth.entity.Token;
-import com.adit.backend.domain.auth.service.query.TokenService;
+import com.adit.backend.domain.auth.service.query.TokenQueryService;
 import com.adit.backend.domain.user.dto.request.UserSignUpRequest;
 import com.adit.backend.domain.user.dto.response.UserInfoResponse;
 import com.adit.backend.domain.user.entity.User;
@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserService {
 
 	private final UserRepository userRepository;
-	private final TokenService tokenService;
+	private final TokenQueryService tokenQueryService;
 
 	public UserInfoResponse changeNickname(UserSignUpRequest userSignUpRequest) {
 		User user = findUserByAccessToken(userSignUpRequest.accessToken());

@@ -60,7 +60,7 @@ public enum GlobalErrorCode implements ErrorCode {
 	// @RequestBody 및 @RequestParam, @PathVariable 값이 유효하지 않음
 	NOT_VALID_HEADER_ERROR(NOT_FOUND, "G012", "Header에 데이터가 존재하지 않는 경우 "),
 
-	SERVLET_ERROR(BAD_REQUEST, "G013" , "Servlet Exception" ),
+	SERVLET_ERROR(BAD_REQUEST, "G013", "Servlet Exception"),
 
 	// 서버가 처리 할 방법을 모르는 경우 발생
 	INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "G999", "Internal Server Error Exception"),
@@ -90,14 +90,24 @@ public enum GlobalErrorCode implements ErrorCode {
 
 	TOKEN_ALREADY_EXIST(UNAUTHORIZED, "1005", "토큰이 이미 생성되었습니다!"),
 
-	REFRESH_TOKEN_EXPIRED(UNAUTHORIZED,"1006" , "리프레쉬 토큰이 만료되었습니다."),
+	REFRESH_TOKEN_EXPIRED(UNAUTHORIZED, "1006", "리프레쉬 토큰이 만료되었습니다."),
 
-	TOKEN_UNSURPPORTED(UNAUTHORIZED,"1007" ,"지원되지 않는 토큰입니다." ),
+	TOKEN_UNSURPPORTED(UNAUTHORIZED, "1007", "지원되지 않는 토큰입니다."),
+
+	TOKEN_DELETE_FAILED(UNAUTHORIZED, "1008", "토큰 삭제를 실패했습니다."),
 	//user
-	USER_NOT_FOUND(NOT_FOUND, "1005", "사용자를 찾지 못했습니다."),
+	USER_NOT_FOUND(NOT_FOUND, "2001", "사용자를 찾지 못했습니다."),
 
-	NICKNAME_ALREADY_EXIST(BAD_REQUEST, "1006", "이미 존재하는 닉네임입니다.");
+	NICKNAME_ALREADY_EXIST(BAD_REQUEST, "2002", "이미 존재하는 닉네임입니다."),
 
+	//Auth
+	KAKAO_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "3001", "카카오 서버에 에러가 발생했습니다."),
+
+	KAKAO_SERVER_CONNECTION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "3002", "카카오 서버에 연결을 실패했습니다."),
+
+	API_REQUEST_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "3003", "API 호출을 실패했습니다."),
+
+	LOGOUT_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "3004" , "로그아웃에 실패했습니다.");
 
 	// 에러 코드의 '코드 상태'을 반환한다.
 	private final HttpStatus httpStatus;

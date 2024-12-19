@@ -47,8 +47,11 @@ public record KakaoResponse(
 		String accessToken,
 
 		@JsonProperty("expires_in")
-		String  expiresIn
+		String expiresIn
 	) {
-
 	}
+
+	public record UserIdDto(Long id) {
+	}
+
 }

@@ -38,6 +38,9 @@ spring:
         options:
           model: gpt-3.5-turbo
 
+kakao:
+  logout-url: https://kapi.kakao.com/v1/user/logout
+
 jwt:
   key: ${JWT_KEY}
   access:
