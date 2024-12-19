@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.adit.backend.domain.user.entity.User;
 import com.adit.backend.domain.user.enums.Role;
+import com.adit.backend.domain.user.enums.SocialType;
 import com.adit.backend.global.security.jwt.exception.AuthException;
 import com.adit.backend.global.util.KeyGenerator;
 
@@ -43,7 +44,8 @@ public record OAuth2UserInfo(
 			.email(email)
 			.profile(profile)
 			.socialId(KeyGenerator.generateKey())
-			.nickname("test")
+			.socialType(SocialType.KAKAO)
+			.nickname(nickname)
 			.role(Role.USER)
 			.build();
 	}

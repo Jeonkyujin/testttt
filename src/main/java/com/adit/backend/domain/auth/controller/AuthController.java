@@ -1,6 +1,7 @@
 package com.adit.backend.domain.auth.controller;
 
-import org.springframework.beans.factory.annotation.Value;
+import java.io.IOException;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -8,12 +9,13 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import com.adit.backend.domain.auth.dto.response.KakaoTokenResponseDto;
+import com.adit.backend.domain.auth.dto.OAuth2UserInfo;
+import com.adit.backend.domain.auth.dto.response.KakaoResponse;
 import com.adit.backend.domain.auth.service.AuthService;
 import com.adit.backend.global.common.ApiResponse;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
@@ -22,33 +24,33 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class AuthController {
 	private final AuthService authService;
-	@Value("${spring.security.oauth2.client.provider.kakao.authorization-uri}")
-	private String authorizationUri;
-	@Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
-	private String redirectUri;
-	@Value("${spring.security.oauth2.client.registration.kakao.client-id}")
-	private String clientId;
 
 	@GetMapping("/kakao")
-	public ResponseEntity<String> kakaoLogin() {
-		String kakaoAuthUrl = UriComponentsBuilder
-			.fromUriString(authorizationUri)
-			.queryParam("client_id", clientId)
-			.queryParam("redirect_uri", redirectUri)
-			.queryParam("response_type", "code")
-			.build()
-			.toUriString();
-		return ResponseEntity.ok("redirect:/" + kakaoAuthUrl);
+	public ResponseEntity<ApiResponse<String>> kakaoLogin(HttpServletResponse response) throws IOException {
+		String kakaoAuthUrl = authService.getKakaoAuthUrl();
+		response.sendRedirect(kakaoAuthUrl);
+		return ResponseEntity.ok(ApiResponse.success("카카오 로그인 페이지 로딩 성공"));
 	}
 
 	@GetMapping("/kakao/callback")
-	public ResponseEntity<ApiResponse<KakaoTokenResponseDto>> kakaoCallback(@RequestParam String code) {
+	public ResponseEntity<ApiResponse<KakaoResponse>> kakaoCallback(@RequestParam String code) {
 		return ResponseEntity.ok(ApiResponse.success(authService.getKakaoAccessToken(code)));
 	}
 
 	@PostMapping("/logout")
-	public ResponseEntity<Void> logout(@RequestHeader("Authorization") String accessToken) {
+	public ResponseEntity<ApiResponse<String>> logout(@RequestHeader("Authorization") String accessToken) {
 		authService.logout(accessToken);
-		return ResponseEntity.ok().build();
+		return ResponseEntity.ok(ApiResponse.success("로그아웃 완료"));
 	}
+
+	@PostMapping("/signup")
+	public ResponseEntity<ApiResponse<OAuth2UserInfo>> signup(@RequestHeader("Authorization") String accessToken) {
+		return ResponseEntity.ok(ApiResponse.success(authService.signup(accessToken)));
+	}
+
+	@PostMapping("/refresh")
+	public ResponseEntity<ApiResponse<KakaoResponse.AccessTokenDto>> renewToken(@RequestHeader("Authorization-refresh") String refreshToken) {
+		return ResponseEntity.ok(ApiResponse.success(authService.renewToken(refreshToken)));
+	}
+
 }

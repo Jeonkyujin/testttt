@@ -14,4 +14,6 @@ public interface TokenRepository extends JpaRepository<Token, Long> {
 
 	@Query("SELECT t FROM Token t JOIN FETCH t.user WHERE t.user.socialId = :socialId")
 	Optional<Token> findByUserWithFetch(String socialId);
+
+	Optional<Token> findByAccessToken(String accessToken);
 }
