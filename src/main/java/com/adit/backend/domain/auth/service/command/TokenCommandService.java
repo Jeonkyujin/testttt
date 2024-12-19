@@ -22,7 +22,7 @@ public class TokenCommandService {
 
 	private final TokenRepository tokenRepository;
 
-	public Token saveOrUpdateToken(KakaoResponse response) {
+	public Token saveOrUpdateToken(KakaoResponse.TokenInfoDto response) {
 		Token token = validateAccessToken(response);
 		log.info("Saving token: {}", token);
 		return tokenRepository.save(token);
@@ -40,8 +40,7 @@ public class TokenCommandService {
 		tokenRepository.flush();
 	}
 
-
-	private Token validateAccessToken(KakaoResponse response) {
+	private Token validateAccessToken(KakaoResponse.TokenInfoDto response) {
 		return tokenRepository.findByAccessToken(response.accessToken())
 			.orElseGet(response::toEntity);
 

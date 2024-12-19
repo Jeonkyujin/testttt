@@ -36,7 +36,7 @@ public class AuthController {
 	}
 
 	@GetMapping("/kakao/callback")
-	public ResponseEntity<ApiResponse<KakaoResponse>> handleKakaoCallback(KakaoRequest.AuthDto request) {
+	public ResponseEntity<ApiResponse<KakaoResponse.TokenInfoDto>> handleKakaoCallback(KakaoRequest.AuthDto request) {
 		return ResponseEntity.ok(
 			ApiResponse.success(authCommandService.exchangeKakaoAuthorizationCode(request.code())));
 	}

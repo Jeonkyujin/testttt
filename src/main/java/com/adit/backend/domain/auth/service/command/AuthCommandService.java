@@ -23,7 +23,7 @@ import com.adit.backend.domain.auth.dto.response.KakaoResponse;
 import com.adit.backend.domain.auth.entity.Token;
 import com.adit.backend.domain.auth.repository.TokenRepository;
 import com.adit.backend.domain.auth.service.query.TokenQueryService;
-import com.adit.backend.domain.user.service.UserService;
+import com.adit.backend.domain.user.service.command.UserCommandService;
 import com.adit.backend.global.error.exception.TokenException;
 import com.adit.backend.global.security.jwt.exception.AuthException;
 
@@ -37,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthCommandService {
 
 	private final RestTemplate restTemplate;
-	private final UserService userService;
+	private final UserCommandService userCommandService;
 	public static final String GRANT_TYPE_AUTH_CODE = "authorization_code";
 	public static final String GRANT_TYPE_REFRESH = "refresh_token";
 	private final TokenRepository tokenRepository;
@@ -79,13 +79,13 @@ public class AuthCommandService {
 			.toUriString();
 	}
 
-	public KakaoResponse exchangeKakaoAuthorizationCode(String code) {
+	public KakaoResponse.TokenInfoDto exchangeKakaoAuthorizationCode(String code) {
 		HttpHeaders headers = createHeaders();
 		MultiValueMap<String, String> params = createAuthCodeParams(code);
-		ResponseEntity<KakaoResponse> response = executeKakaoRequest(
+		ResponseEntity<KakaoResponse.TokenInfoDto> response = executeKakaoRequest(
 			tokenUri,
 			new HttpEntity<>(params, headers),
-			KakaoResponse.class
+			KakaoResponse.TokenInfoDto.class
 		);
 		tokenCommandService.saveOrUpdateToken(response.getBody());
 		return response.getBody();
@@ -95,7 +95,7 @@ public class AuthCommandService {
 		OAuth2UserInfo oAuth2UserInfo = tokenQueryService.extractAccessToken(accessToken);
 		Token token = tokenRepository.findByAccessToken(accessToken)
 			.orElseThrow(() -> new TokenException(TOKEN_NOT_FOUND));
-		userService.getOrSaveUser(oAuth2UserInfo, token);
+		userCommandService.getOrSaveUser(oAuth2UserInfo, token);
 		return oAuth2UserInfo;
 	}
 
