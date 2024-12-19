@@ -7,7 +7,6 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.adit.backend.domain.user.principal.PrincipalDetails;
@@ -21,7 +20,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Component
 @Slf4j
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {

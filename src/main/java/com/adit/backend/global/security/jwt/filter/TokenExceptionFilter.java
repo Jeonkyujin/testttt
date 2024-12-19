@@ -2,7 +2,6 @@ package com.adit.backend.global.security.jwt.filter;
 
 import java.io.IOException;
 
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.adit.backend.global.error.exception.TokenException;
@@ -12,7 +11,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@Component
 public class TokenExceptionFilter extends OncePerRequestFilter {
 
 	@Override
