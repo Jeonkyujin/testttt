@@ -2,12 +2,14 @@ package com.adit.backend.domain.user.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.adit.backend.domain.user.dto.request.UserSignUpRequest;
-import com.adit.backend.domain.user.dto.response.UserInfoResponse;
-import com.adit.backend.domain.user.service.UserService;
+import com.adit.backend.domain.user.dto.request.UserRequest;
+import com.adit.backend.domain.user.dto.response.UserResponse;
+import com.adit.backend.domain.user.service.command.UserCommandService;
 import com.adit.backend.global.common.ApiResponse;
 
 import jakarta.validation.Valid;
@@ -19,11 +21,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserController {
 
-	private final UserService userService;
+	private final UserCommandService userCommandService;
 
 	@PostMapping("/nickname")
-	public ResponseEntity<ApiResponse<UserInfoResponse>> changeNickname(
-		@Valid UserSignUpRequest userSignUpRequest) {
-		return ResponseEntity.ok(ApiResponse.success(userService.changeNickname(userSignUpRequest)));
+	public ResponseEntity<ApiResponse<UserResponse.InfoDto>> changeNickname(
+		@RequestHeader("Authorization") String accessCode, @RequestBody @Valid UserRequest.NicknameDto request) {
+		return ResponseEntity.ok(
+			ApiResponse.success(userCommandService.changeNickname(accessCode, request.nickname())));
 	}
 }
