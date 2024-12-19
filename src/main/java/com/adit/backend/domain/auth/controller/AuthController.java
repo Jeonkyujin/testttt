@@ -16,6 +16,7 @@ import com.adit.backend.domain.auth.dto.response.KakaoResponse;
 import com.adit.backend.domain.auth.service.command.AuthCommandService;
 import com.adit.backend.global.common.ApiResponse;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -42,18 +43,21 @@ public class AuthController {
 	}
 
 	@PostMapping("/login")
+	@SecurityRequirement(name = "accessTokenAuth")
 	public ResponseEntity<ApiResponse<OAuth2UserInfo>> login(
 		@RequestHeader(ACCESS_TOKEN_HEADER) KakaoRequest.AccessTokenDto request) {
 		return ResponseEntity.ok(ApiResponse.success(authCommandService.login(request.accessToken())));
 	}
 
 	@PostMapping("/refresh")
+	@SecurityRequirement(name = "refreshTokenAuth")
 	public ResponseEntity<ApiResponse<KakaoResponse.AccessTokenDto>> renewToken(
 		@RequestHeader(REFRESH_TOKEN_HEADER) KakaoRequest.RefreshTokenDto request) {
 		return ResponseEntity.ok(ApiResponse.success(authCommandService.refreshKakaoToken(request.refreshToken())));
 	}
 
 	@DeleteMapping("/logout")
+	@SecurityRequirement(name = "accessTokenAuth")
 	public ResponseEntity<ApiResponse<KakaoResponse.UserIdDto>> logout(
 		@RequestHeader(ACCESS_TOKEN_HEADER) KakaoRequest.AccessTokenDto request) {
 		return ResponseEntity.ok(ApiResponse.success(authCommandService.logout(request.accessToken())));

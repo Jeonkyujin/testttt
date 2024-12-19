@@ -12,6 +12,7 @@ import com.adit.backend.domain.user.dto.response.UserResponse;
 import com.adit.backend.domain.user.service.command.UserCommandService;
 import com.adit.backend.global.common.ApiResponse;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class UserController {
 	private final UserCommandService userCommandService;
 
 	@PostMapping("/nickname")
+	@SecurityRequirement(name = "accessTokenAuth")
 	public ResponseEntity<ApiResponse<UserResponse.InfoDto>> changeNickname(
 		@RequestHeader("Authorization") String accessCode, @RequestBody @Valid UserRequest.NicknameDto request) {
 		return ResponseEntity.ok(
