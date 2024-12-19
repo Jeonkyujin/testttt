@@ -102,6 +102,11 @@ public class User extends BaseEntity {
 		friendship.setFromUser(this);
 	}
 
+	public void addToken(Token token) {
+		this.token = token;
+		token.updateUserInfo(this);
+	}
+
 	public void changeNickName(String nickName) {
 		this.nickname = nickName;
 	}

@@ -36,7 +36,7 @@ public class JwtTokenService {
 				token -> {
 					log.info("발급된 토큰이 존재합니다. 업데이트합니다.");
 					token.updateRefreshToken(refreshToken);
-					token.updateAccessToken(accessToken);
+					token.updateAccessToken(accessToken, "");
 				},
 				() -> {
 					log.info("발급된 토큰이 존재하지 않습니다 발급합니다.");
@@ -57,7 +57,7 @@ public class JwtTokenService {
 	}
 
 	public void updateAccessToken(String accessToken, Token token) {
-		token.updateAccessToken(accessToken);
+		token.updateAccessToken(accessToken, "");
 	}
 
 	public void updateRefreshToken(String refreshToken, Token token) {
