@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.filter.CorsFilter;
 
 import com.adit.backend.global.security.jwt.handler.CustomAccessDeniedHandler;
 import com.adit.backend.global.security.jwt.handler.CustomAuthenticationEntryPoint;
@@ -26,6 +27,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class SecurityConfig {
 
+	private final CorsFilter corsFilter;
+
 	@Bean
 	public WebSecurityCustomizer webSecurityCustomizer() {
 		return web -> web.ignoring()
@@ -41,7 +44,6 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 			.csrf(AbstractHttpConfigurer::disable)
-			.cors(AbstractHttpConfigurer::disable)
 			.httpBasic(AbstractHttpConfigurer::disable)
 			.formLogin(AbstractHttpConfigurer::disable)
 			.logout(AbstractHttpConfigurer::disable)
@@ -49,7 +51,7 @@ public class SecurityConfig {
 				HeadersConfigurer.FrameOptionsConfig::disable).disable())
 			.sessionManagement(session ->
 				session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
+			.addFilter(corsFilter)
 			.authorizeHttpRequests(request -> request
 				.requestMatchers(
 					"/",

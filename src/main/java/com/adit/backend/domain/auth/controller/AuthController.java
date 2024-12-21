@@ -3,6 +3,7 @@ package com.adit.backend.domain.auth.controller;
 import java.io.IOException;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,24 +37,18 @@ public class AuthController {
 		return ResponseEntity.ok(ApiResponse.success("카카오 로그인 페이지 로딩 성공"));
 	}
 
-	@GetMapping("/kakao/callback")
-	public ResponseEntity<ApiResponse<KakaoResponse.TokenInfoDto>> handleKakaoCallback(KakaoRequest.AuthDto request) {
+	@GetMapping("/join")
+	public ResponseEntity<ApiResponse<UserResponse.InfoDto>> joinAuth(KakaoRequest.AuthDto request,
+		HttpServletResponse response) {
 		return ResponseEntity.ok(
-			ApiResponse.success(authCommandService.exchangeKakaoAuthorizationCode(request.code())));
+			ApiResponse.success(authCommandService.joinAuth(request.code(), response)));
 	}
 
-	@PostMapping("/login")
-	@SecurityRequirement(name = "accessTokenAuth")
-	public ResponseEntity<ApiResponse<UserResponse.InfoDto>> login(
-		@RequestHeader(ACCESS_TOKEN_HEADER) KakaoRequest.AccessTokenDto request) {
-		return ResponseEntity.ok(ApiResponse.success(authCommandService.login(request.accessToken())));
-	}
-
-	@PostMapping("/refresh")
-	@SecurityRequirement(name = "refreshTokenAuth")
-	public ResponseEntity<ApiResponse<KakaoResponse.AccessTokenDto>> renewToken(
-		@RequestHeader(REFRESH_TOKEN_HEADER) KakaoRequest.RefreshTokenDto request) {
-		return ResponseEntity.ok(ApiResponse.success(authCommandService.refreshKakaoToken(request.refreshToken())));
+	@PostMapping("/reissue")
+	public ResponseEntity<ApiResponse<KakaoResponse.AccessTokenDto>> reissueToken(
+		@CookieValue(name = "refreshToken") KakaoRequest.RefreshTokenDto request, HttpServletResponse response) {
+		return ResponseEntity.ok(
+			ApiResponse.success(authCommandService.reIssueKakaoToken(request.refreshToken(), response)));
 	}
 
 	@DeleteMapping("/logout")

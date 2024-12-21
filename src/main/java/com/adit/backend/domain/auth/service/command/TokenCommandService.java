@@ -24,26 +24,26 @@ public class TokenCommandService {
 
 	public Token saveOrUpdateToken(KakaoResponse.TokenInfoDto response) {
 		Token token = validateAccessToken(response);
-		log.info("Saving token: {}", token);
+		log.info("[토큰 저장 완료] accessToken : {} , refreshToken : {}", token.getAccessToken(), token.getRefreshToken());
 		return tokenRepository.save(token);
 	}
 
 	public Token updateTokenEntity(KakaoResponse.AccessTokenDto response, String refreshToken) {
 		Token token = validateRefreshToken(refreshToken);
 		token.updateAccessToken(response.accessToken(), response.expiresIn());
-		log.info("Updating token: {}", token);
+		log.info("[토큰 갱신 완료] accessToken : {} , refreshToken : {}", token.getAccessToken(), token.getRefreshToken());
 		return tokenRepository.save(token);
 	}
 
-	public void deleteToken(String tokenValue) {
-		tokenRepository.deleteByAccessToken(tokenValue);
+	public void deleteToken(String accessToken) {
+		tokenRepository.deleteByAccessToken(accessToken);
+		log.info("[토큰 삭제 완료] accessToken : {}", accessToken);
 		tokenRepository.flush();
 	}
 
 	private Token validateAccessToken(KakaoResponse.TokenInfoDto response) {
 		return tokenRepository.findByAccessToken(response.accessToken())
 			.orElseGet(response::toEntity);
-
 	}
 
 	private Token validateRefreshToken(String refreshToken) {

@@ -14,7 +14,7 @@ spring:
           kakao:
             client-id: ${KAKAO_CLIENT_ID}
             client-secret: ${KAKAO_CLIENT_SECRET}
-            redirect-uri: "http://localhost:8080/api/auth/kakao/callback"
+            redirect-uri: "http://localhost:8080/api/auth/join"
             client-authentication-method: client_secret_post # kakao는 인증 토큰 발급 요청 메서드가 post이다. (최근 버전에는 작성 방법이 이렇게 바뀌었다.)
             authorization-grant-type: authorization_code
             scope: # kakao 개인 정보 동의 항목 설정의 ID 값
@@ -41,12 +41,12 @@ spring:
 kakao:
   logout-url: https://kapi.kakao.com/v1/user/logout
 
-jwt:
+token:
   key: ${JWT_KEY}
   access:
-    expiration: 3600000 # 1시간(60분) (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h))
+    expiration: 43200 # 1시간(60분) (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h))
     header: Authorization
 
   refresh:
-    expiration: 1209600000 #  (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h) * 24L(h -> 하루) * 14(2주))
+    expiration: 5184000 #  (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h) * 24L(h -> 하루) * 14(2주))
     header: Authorization-refresh
