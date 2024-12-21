@@ -21,18 +21,19 @@ import lombok.extern.slf4j.Slf4j;
 public class UserQueryService {
 
 	private final UserRepository userRepository;
+	public static final String DEFAULT_NICKNAME = "GUEST";
 
 	public User findUserByAccessToken(String accessToken) {
 		return userRepository.findUserByToken_AccessToken(accessToken)
 			.orElseThrow(() -> new UserException(USER_NOT_FOUND));
 	}
 
-	public User findUserByEmail(OAuth2UserInfo oAuth2UserInfo) {
+	public User findUserByOAuthInfo(OAuth2UserInfo oAuth2UserInfo) {
 		return userRepository.findByEmail(oAuth2UserInfo.email())
 			.orElseGet(oAuth2UserInfo::toEntity);
 	}
 
-	public void validateNickName(String nickname) {
+	public void validateDuplicateNicknames(String nickname) {
 		if (nickname == null || nickname.trim().isEmpty()) {
 			throw new UserException(NULL_POINT_ERROR);
 		} else if (userRepository.existsByNickname(nickname)) {

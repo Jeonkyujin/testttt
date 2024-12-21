@@ -15,10 +15,12 @@ import lombok.Builder;
 @Builder
 public record OAuth2UserInfo(
 	String name,
-	String nickname,
+	Role role,
 	String email,
 	String profile
 ) {
+
+	public static final String DEFAULT_NICKNAME = "GUEST";
 
 	public static OAuth2UserInfo of(String registrationId, Map<String, Object> attributes) throws AuthException {
 		return switch (registrationId) {
@@ -42,11 +44,11 @@ public record OAuth2UserInfo(
 		return User.builder()
 			.name(name)
 			.email(email)
+			.nickname(DEFAULT_NICKNAME)
 			.profile(profile)
 			.socialId(KeyGenerator.generateKey())
 			.socialType(SocialType.KAKAO)
-			.nickname(nickname)
-			.role(Role.USER)
+			.role(Role.GUEST)
 			.build();
 	}
 }

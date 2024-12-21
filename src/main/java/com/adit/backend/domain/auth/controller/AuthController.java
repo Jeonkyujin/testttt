@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.adit.backend.domain.auth.dto.OAuth2UserInfo;
 import com.adit.backend.domain.auth.dto.request.KakaoRequest;
 import com.adit.backend.domain.auth.dto.response.KakaoResponse;
 import com.adit.backend.domain.auth.service.command.AuthCommandService;
+import com.adit.backend.domain.user.dto.response.UserResponse;
 import com.adit.backend.global.common.ApiResponse;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -44,7 +44,7 @@ public class AuthController {
 
 	@PostMapping("/login")
 	@SecurityRequirement(name = "accessTokenAuth")
-	public ResponseEntity<ApiResponse<OAuth2UserInfo>> login(
+	public ResponseEntity<ApiResponse<UserResponse.InfoDto>> login(
 		@RequestHeader(ACCESS_TOKEN_HEADER) KakaoRequest.AccessTokenDto request) {
 		return ResponseEntity.ok(ApiResponse.success(authCommandService.login(request.accessToken())));
 	}

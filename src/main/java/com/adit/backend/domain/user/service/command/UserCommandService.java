@@ -3,7 +3,6 @@ package com.adit.backend.domain.user.service.command;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.adit.backend.domain.auth.dto.OAuth2UserInfo;
 import com.adit.backend.domain.auth.entity.Token;
 import com.adit.backend.domain.user.converter.UserConverter;
 import com.adit.backend.domain.user.dto.response.UserResponse;
@@ -26,13 +25,13 @@ public class UserCommandService {
 
 	public UserResponse.InfoDto changeNickname(String accessToken, String nickname) {
 		User user = userQueryService.findUserByAccessToken(accessToken);
-		userQueryService.validateNickName(nickname);
+		userQueryService.validateDuplicateNicknames(nickname);
 		user.changeNickName(nickname);
+		user.updateRole();
 		return UserConverter.InfoDto(user);
 	}
 
-	public User getOrSaveUser(OAuth2UserInfo oAuth2UserInfo, Token token) {
-		User user = userQueryService.findUserByEmail(oAuth2UserInfo);
+	public User saveUserWithToken(User user, Token token) {
 		user.addToken(token);
 		log.info("Saving user: {}", user);
 		return userRepository.save(user);

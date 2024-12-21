@@ -114,4 +114,8 @@ public class User extends BaseEntity {
 	public void decideSocialType() {
 		this.socialType = SocialType.KAKAO;
 	}
+
+	public void updateRole() {
+		this.role = Role.USER;
+	}
 }

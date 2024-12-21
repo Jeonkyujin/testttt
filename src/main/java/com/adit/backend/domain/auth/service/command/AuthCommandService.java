@@ -23,7 +23,11 @@ import com.adit.backend.domain.auth.dto.response.KakaoResponse;
 import com.adit.backend.domain.auth.entity.Token;
 import com.adit.backend.domain.auth.repository.TokenRepository;
 import com.adit.backend.domain.auth.service.query.TokenQueryService;
+import com.adit.backend.domain.user.converter.UserConverter;
+import com.adit.backend.domain.user.dto.response.UserResponse;
+import com.adit.backend.domain.user.entity.User;
 import com.adit.backend.domain.user.service.command.UserCommandService;
+import com.adit.backend.domain.user.service.query.UserQueryService;
 import com.adit.backend.global.error.exception.TokenException;
 import com.adit.backend.global.security.jwt.exception.AuthException;
 
@@ -44,6 +48,7 @@ public class AuthCommandService {
 	public static final String RESPONSE_TYPE = "code";
 	private final TokenCommandService tokenCommandService;
 	private final TokenQueryService tokenQueryService;
+	private final UserQueryService userQueryService;
 
 	@Value("${spring.security.oauth2.client.registration.kakao.client-id}")
 	private String clientId;
@@ -91,12 +96,12 @@ public class AuthCommandService {
 		return response.getBody();
 	}
 
-	public OAuth2UserInfo login(String accessToken) {
+	public UserResponse.InfoDto login(String accessToken) {
 		OAuth2UserInfo oAuth2UserInfo = tokenQueryService.extractAccessToken(accessToken);
-		Token token = tokenRepository.findByAccessToken(accessToken)
-			.orElseThrow(() -> new TokenException(TOKEN_NOT_FOUND));
-		userCommandService.getOrSaveUser(oAuth2UserInfo, token);
-		return oAuth2UserInfo;
+		User user = userQueryService.findUserByOAuthInfo(oAuth2UserInfo);
+		Token token = tokenQueryService.findTokenByAccessToken(accessToken);
+		userCommandService.saveUserWithToken(user, token);
+		return UserConverter.InfoDto(user);
 	}
 
 	public KakaoResponse.AccessTokenDto refreshKakaoToken(String refreshToken) {
@@ -115,7 +120,7 @@ public class AuthCommandService {
 	}
 
 	public KakaoResponse.UserIdDto logout(String accessToken) {
-		String tokenValue = accessToken.replace("Bearer ", ""); // Bearer 제거 필요
+		String tokenValue = accessToken.replace("Bearer ", "");
 		HttpHeaders headers = new HttpHeaders();
 		headers.setBearerAuth(tokenValue);
 
