@@ -2,6 +2,7 @@ package com.adit.backend.domain.auth.service.command;
 
 import static com.adit.backend.global.error.GlobalErrorCode.*;
 import static org.springframework.http.MediaType.*;
+import static org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames.*;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -106,8 +107,8 @@ public class AuthCommandService {
 		return accessTokenDto;
 	}
 
-	public KakaoResponse.UserIdDto logout(String accessToken) {
-		return executeKakaoLogoutRequest(accessToken.replace("Bearer ", ""));
+	public KakaoResponse.UserIdDto logout(String accessToken, HttpServletResponse response) {
+		return executeKakaoLogoutRequest(accessToken.replace("Bearer ", ""), response);
 	}
 
 	private UserResponse.InfoDto login(String accessToken) {
@@ -131,24 +132,34 @@ public class AuthCommandService {
 		log.info("[쿠키 생성 완료] Cookie: {}", cookie.getValue());
 	}
 
-	private KakaoResponse.UserIdDto executeKakaoLogoutRequest(String accessToken) {
+	private KakaoResponse.UserIdDto executeKakaoLogoutRequest(String accessToken, HttpServletResponse response) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setBearerAuth(accessToken);
 		try {
-			KakaoResponse.UserIdDto response = restTemplate.exchange(
+			KakaoResponse.UserIdDto userIdDto = restTemplate.exchange(
 				logoutUrl,
 				HttpMethod.POST,
 				new HttpEntity<>(headers),
 				KakaoResponse.UserIdDto.class
 			).getBody();
-
-			tokenCommandService.deleteToken(accessToken);
+			deleteRefreshTokenToCookie(accessToken, response);
 			log.info("[로그아웃 성공] : {}", accessToken);
-			return response;
+			return userIdDto;
 		} catch (Exception e) {
 			log.error("로그아웃 실패: {}", e.getMessage());
 			throw new TokenException(LOGOUT_FAILED);
 		}
+	}
+
+	private void deleteRefreshTokenToCookie(String accessToken, HttpServletResponse response) {
+		Cookie deleteCookie = new Cookie(REFRESH_TOKEN, null);
+		deleteCookie.setMaxAge(0);
+		deleteCookie.setPath("/");
+		deleteCookie.setSecure(true);
+		deleteCookie.setHttpOnly(true);
+		response.addCookie(deleteCookie);
+		tokenCommandService.deleteToken(accessToken);
+		log.info("[쿠키 생성 완료] deleteCookie: {}", deleteCookie.getValue());
 	}
 
 	private ResponseEntity<KakaoResponse.TokenInfoDto> executeKakaoLoginRequest(String code) {

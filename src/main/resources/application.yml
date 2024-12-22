@@ -44,9 +44,9 @@ kakao:
 token:
   key: ${JWT_KEY}
   access:
-    expiration: 43200 # 1시간(60분) (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h))
+    expiration: 43200
     header: Authorization
 
   refresh:
-    expiration: 5184000 #  (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h) * 24L(h -> 하루) * 14(2주))
+    expiration: 5184000
     header: Authorization-refresh
