@@ -12,8 +12,8 @@ spring:
       client:
         registration:
           kakao:
-            client-id: ${KAKAO_CLIENT_ID}
-            client-secret: ${KAKAO_CLIENT_SECRET}
+            client-id: f095702a4ec01af8109cdd4f622c92a1
+            client-secret: kiYEtyxbZfDhpotOpjasoyjfWGQ0HqdZ
             redirect-uri: "http://localhost:8080/api/auth/join"
             client-authentication-method: client_secret_post # kakao는 인증 토큰 발급 요청 메서드가 post이다. (최근 버전에는 작성 방법이 이렇게 바뀌었다.)
             authorization-grant-type: authorization_code
@@ -42,7 +42,7 @@ kakao:
   logout-url: https://kapi.kakao.com/v1/user/logout
 
 token:
-  key: ${JWT_KEY}
+  key: MjU0ZTFiZGMtMDNmZC00ZjhlLThlMWItZGMwM2ZkOWY4ZTlkN2E5OGJkZTItNmUxNS00ZjZjLTk4YmQtZTI2ZTE1NGY2YzI4NjA4MzJhNTktZDNmZi00ZDViLTgzMmEtNTlkM2ZmYWQ1YmQ4
   access:
     expiration: 43200
     header: Authorization
