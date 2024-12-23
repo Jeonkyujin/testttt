@@ -3,9 +3,9 @@ spring:
   config:
     import: optional:file:.env[.properties]
   datasource:
-    url: jdbc:mysql://localhost:3306/adit?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mysql://database-1.cp0caokgorxg.ap-northeast-2.rds.amazonaws.com:3306/test?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: root
-    password: asd078!
+    password: a1234567
     driver-class-name: com.mysql.cj.jdbc.Driver
   sql:
     init:
